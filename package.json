@@ -7,8 +7,7 @@
     "node": ">=22.16",
     "pnpm": ">=10.22.0"
   },
-  "packageManager": "pnpm@10.22.0",
-  "scripts": {
+ "packageManager": "npm@10.0.0",  "scripts": {
     "prepare": "node scripts/prepare.mjs",
     "preinstall": "node scripts/block-npm-install.js",
     "build": "turbo run build",
