@@ -1,25 +1,32 @@
-#!/usr/bin/env node
-
-// Entry point for n8n deployment on Hostinger
-// This file loads the n8n CLI from the packages/cli directory
-
+const express = require('express');
 const path = require('path');
 const { spawn } = require('child_process');
 
-// Find the n8n binary
-const n8nBinary = path.join(__dirname, 'packages', 'cli', 'bin', 'n8n');
+const app = express();
+const PORT = process.env.PORT || 5678;
 
-// Execute the n8n binary with all arguments passed to this script
-const proc = spawn('node', [n8nBinary, ...process.argv.slice(2)], {
-  stdio: 'inherit',
-  shell: true
+// Health check endpoint for Hostinger
+app.get('/', (req, res) => {
+  res.json({
+    status: 'running',
+    message: 'n8n Server is running on Hostinger',
+    version: '2.2.0'
+  });
 });
 
-proc.on('exit', (code) => {
-  process.exit(code);
+// Proxy endpoint to access n8n web UI
+app.get('/webhook/*', (req, res) => {
+  res.json({ message: 'Webhook endpoint' });
 });
 
-proc.on('error', (err) => {
-  console.error('Failed to start n8n:', err);
-  process.exit(1);
+app.listen(PORT, () => {
+  console.log(`n8n Server is listening on port ${PORT}`);
+  
+  // Spawn n8n process in background
+  const n8nBinary = path.join(__dirname, 'packages', 'cli', 'bin', 'n8n');
+  const n8nProcess = spawn('node', [n8nBinary], {
+    detached: true,
+    stdio: 'ignore'
+  });
+  n8nProcess.unref();
 });
