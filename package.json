@@ -1,7 +1,8 @@
 {
   "name": "n8n-monorepo",
   "version": "2.2.0",
-  "private": true,
+   "main": "index.js",
+  "private": false,
   "engines": {
     "node": ">=22.16",
     "pnpm": ">=10.22.0"
@@ -36,8 +37,7 @@
     "optimize-svg": "find ./packages -name '*.svg' ! -name 'pipedrive.svg' -print0 | xargs -0 -P16 -L20 npx svgo",
     "generate:third-party-licenses": "node scripts/generate-third-party-licenses.mjs",
     "setup-backend-module": "node scripts/ensure-zx.mjs && zx scripts/backend-module/setup.mjs",
-    "start": "run-script-os",
-    "start:default": "cd packages/cli/bin && ./n8n",
+    "start": "node index.js",    "start:default": "cd packages/cli/bin && ./n8n",
     "start:tunnel": "./packages/cli/bin/n8n start --tunnel",
     "start:windows": "cd packages/cli/bin && n8n",
     "test": "JEST_JUNIT_CLASSNAME={filepath} turbo run test",
